@@ -8,7 +8,8 @@ fids = dxl.scan(ids=list(range(19)))
 def set_pos(poses):
     dicts={}
     for i in range(0,len(fids)):
-        dicts[fids[i]]=(poses[i]-512)*0.29
+        dicts[fids[i]]=poses[i]
+        #dicts[fids[i]]=(poses[i]-512)*0.29
     dxl.set_goal_position(dicts)
 
 def get_pos():
@@ -22,7 +23,7 @@ def motion(addr):
     for a in range(sheet.nrows):
         for b in range(sheet.ncols):
             meghdr = sheet.cell_value(a, b)
-            angles.append(int(meghdr))
+            angles.append(meghdr)
         amotion.append(angles)
         angles = []
     return amotion
