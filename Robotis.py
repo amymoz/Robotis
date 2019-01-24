@@ -12,11 +12,11 @@ res = (-81.67, 81.09, -68.48, 55, -14.52, 13.64, -46.19, 44.72, -3.37, 15, -46.7
 set_pos(res)
 
 cv2.namedWindow('window')
-while True:
-    for i in range(1,86):
-        mm = motion(excel_file)
-        set_pos(mm[i])
-        sleep(float(mm[i][18]))
+#while True:
+#    for i in range(1,86):
+#        mm = motion(excel_file)
+#        set_pos(mm[i])
+#        sleep(float(mm[i][18]))
 while True:
     prt("Inter number of servo==> ",end='')
     fid=''
@@ -34,9 +34,9 @@ while True:
         key=cv2.waitKeyEx(0)
         pos=float(get_pos()[(fid-1)])
         if (key == 50):
-            pos += 1
+            pos += 2
         elif (key == 48):
-            pos -= 1
+            pos -= 2
         elif (key == 13):
             break
         dxl.set_goal_position({fid:pos})
