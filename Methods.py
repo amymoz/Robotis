@@ -1,9 +1,13 @@
 import xlrd
+from os import system
 import pypot.dynamixel as dynamixel
 #Start Dynamixel
 port = dynamixel.get_available_ports()[0]
 dxl = dynamixel.DxlIO(port)
 fids = dxl.scan(ids=list(range(19)))
+
+def prt(st,end='\n'):
+    system("printf \"{0}\"".format(st+end))
 
 def set_pos(poses):
     dicts={}
