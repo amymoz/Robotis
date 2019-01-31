@@ -6,16 +6,7 @@ from Methods import *
 poss_file = "/media/Game/Professional/Project/GitArch/Robotis/poss.txt"
 frames = motion_file(poss_file)
 dxl.enable_torque(fids)
-
 set_speed(200)
-#poss=[8,15,15,79,51,58,58,65,37,44,44,79]
-#for i in poss[0:4]:
-#    set_pos(frames[i+1])
-#    sleep(0.7)
-#while True:
-#    for i in poss[4:]:
-#        set_pos(frames[i+1])
-#        sleep(0.3)
 
 cv2.namedWindow('window')
 dicts={}
@@ -27,6 +18,7 @@ fid=str(fids[0])
 pos=0
 np=''
 def tec():
+
     dxl.set_goal_position({int(fid):pos})
 def home():
     system("clear")
@@ -75,9 +67,10 @@ while True:
             set_pos(frames[frm[0]][frm[1]])
             home()
         elif (key == ord('p')):
+            play_frames(frames,[32,33])
             while True:
-                play_frames(frames,[39])
-                sleep(1)
+                play_frames(frames,[38,39,36,37])
+                #sleep(0.1)
                 
         elif (key == ord('w')):
             pos += float(2)

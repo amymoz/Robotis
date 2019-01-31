@@ -56,7 +56,7 @@ def play_frames(file_frms,selected_frms):
     for a in selected_frms:
         for b in file_frms[a]:
                 set_pos(b)
-                sleep(0.03) #to be continued
+                sleep(0.02) #to be continued
 
 #Start Dynamixel
 port = dynamixel.get_available_ports()[0]
