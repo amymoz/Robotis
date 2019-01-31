@@ -67,6 +67,8 @@ while True:
             set_pos(frames[frm[0]][frm[1]])
             home()
         elif (key == ord('p')):
+            play_frames(frames,[31])
+            sleep(2)
             play_frames(frames,[32,33])
             while True:
                 play_frames(frames,[38,39,36,37])
