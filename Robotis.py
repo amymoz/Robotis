@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from os import system
 from time import sleep
 import cv2
@@ -20,11 +21,12 @@ fid=str(fids[0])
 pos=0
 np=''
 def tec():
-
     dxl.set_goal_position({int(fid):pos})
+
 def home():
     system("clear")
     print(fids)
+    
 while True:
     home()
     while True :
