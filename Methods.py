@@ -33,7 +33,7 @@ def motion_excel(addr):
         amotion.append(angles)
         angles = []
     return amotion
-def motion_file(addr):
+def motion_file(addr,starti=1):
     file = open(addr,'r')
     data = file.read()
     file.close()
@@ -42,7 +42,7 @@ def motion_file(addr):
     frm = []
     for a in data.split('\n'):
         str_frms = str(a).split(';')
-        for b in range(1,len(str_frms)):
+        for b in range(starti,len(str_frms)):
             str_frm = str(str_frms[b]).split(',')
             for c in range(len(str_frm)):
                 frm.append(str_frm[c])
@@ -52,11 +52,24 @@ def motion_file(addr):
         amotion.append(frms)
         frms = []
     return amotion
+def save_file(addr,arr_file):
+    file = open(addr,'w+')
+    frm=''
+    frms=''
+    for a in arr_file:
+        for b in a:
+            ss = str(b).replace('[','').replace(']','').replace(' ','').replace('\'','') + ';'
+            frm += ss
+        frms += frm[:len(frm)-1]+'\n'
+        frm = ''
+    frms = frms[:len(frms)-1]
+    file.write(frms)
+    file.close()
 def play_frames(file_frms,selected_frms):
     for a in selected_frms:
         for b in file_frms[a]:
                 set_pos(b)
-                sleep(0.02) #to be continued
+                sleep(0.03) #to be continued
 
 #Start Dynamixel
 port = dynamixel.get_available_ports()[0]

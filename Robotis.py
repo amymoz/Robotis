@@ -3,10 +3,12 @@ from time import sleep
 import cv2
 from Methods import *
 
-poss_file = "/media/Game/Professional/Project/GitArch/Robotis/poss.txt"
+poss_file = "/media/Game/Professional/Project/GitArch/Robotis/poss2.txt"
+
 frames = motion_file(poss_file)
 dxl.enable_torque(fids)
-set_speed(200)
+
+set_speed(150)
 
 cv2.namedWindow('window')
 dicts={}
@@ -67,13 +69,44 @@ while True:
             set_pos(frames[frm[0]][frm[1]])
             home()
         elif (key == ord('p')):
-            play_frames(frames,[31])
-            sleep(2)
-            play_frames(frames,[32,33])
+#            play_frames(frames,[32,33])
             while True:
                 play_frames(frames,[38,39,36,37])
-                #sleep(0.1)
-                
+        elif (key == ord('v')):
+            print('')
+            st = ''
+            while True:
+                prt("\033[2K\033[0GInter line,frame,id==> {}".format(st),end='')
+                out = cv2.waitKeyEx(0)
+                if (out < 58 and out > 47):
+                    st += chr(int(out))
+                elif (out == ord(',')):
+                    st += ','
+                elif (key == ord('-')):
+                    st = '-'
+                elif (out == 8):
+                    st = st[:len(st)-1]
+                elif (out == 13):
+                    break
+            print('')
+            st = str(st).split(',')
+            for a in range(len(st)):
+                st[a]= int(st[a])-1
+            valu = frames[st[0]][st[1]][st[2]]
+            val=''
+            while True:
+                prt("\033[2K\033[0GInter new value({})==> {}".format(valu,val),end='')
+                out = cv2.waitKeyEx(0)
+                if (out < 58 and out > 47):
+                    val += chr(int(out))
+                elif (out == 8):
+                    val = val[:len(val)-1]
+                elif (out == 13):
+                    break
+            frames[st[0]][st[1]][st[2]] = val
+            home()
+        elif (key == ord('l')):
+            save_file(poss_file,frames)
         elif (key == ord('w')):
             pos += float(2)
             tec()
