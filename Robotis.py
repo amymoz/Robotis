@@ -4,13 +4,12 @@ from time import sleep
 import cv2
 from Methods import *
 
-poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/poss2.txt"
-#poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/noname.mtnx"
+#poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/poss2.txt"
+poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/noname.mtnx"
 frames = motion_file(poss_file)
 dxl.enable_torque(fids)
 
-
-set_speed(200)
+set_speed(100)
 
 cv2.namedWindow('window')
 dicts={}
@@ -21,6 +20,7 @@ dxl.set_force_control_enable(dicts)
 fid=str(fids[0])
 pos=0
 u_input=''
+
 def update_pos():
     dxl.set_goal_position({int(fid):pos})
 
@@ -41,16 +41,12 @@ while True :
             s_frame[i] = int(s_frame[i])-1
         set_pos(frames[s_frame[0]][s_frame[1]])
     elif (u_input == 'p'):
-        #play_frames(frames,[3])
-        #sleep(0.1)
-        #while True:
-        #    play_frames(frames,[5,6])
-        play_frames(frames,[31])
-        sleep(2)
+        play_frames(frames,[3])
         while True:
-            play_frames(frames,[38,39,36,37])
-            set_speed(int(dxl.get_moving_speed([1])[0])+10)
-            print(int(dxl.get_moving_speed([1])[0]))
+            play_frames(frames,[5,6])
+        #play_frames(frames,[31])
+        #while True:
+        #    play_frames(frames,[38,39,36,37])
     elif (u_input == 'c'):
         out = input_cv("Inter line,frame,id ==> ").split(',')
         for a in range(len(out)):

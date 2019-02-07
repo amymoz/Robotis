@@ -1,4 +1,4 @@
-from time import sleep 
+from time import * 
 import xlrd
 import cv2
 from os import system
@@ -7,21 +7,62 @@ import pypot.dynamixel as dynamixel
 def prt(st,end='\n'):
     system("printf \"{0}\"".format(st+end))
 
-def set_speed(speed):
+def array_int(out):
+    for a in range(len(out)):
+        out[a] = float(out[a])
+    return out
+class hom:
+    prev_pos = [0]
+    speed=0
+def set_speed(sped):
     dicts={}
     for i in range(0,len(fids)):
-        dicts[fids[i]]=speed
+        dicts[fids[i]]=sped
+    hom.speed = sped
     dxl.set_moving_speed(dicts)
 
-def set_pos(poses):
-    dicts={}
-    for i in range(0,len(fids)):
-        dicts[fids[i]]=poses[i]
-    #.goto_position(dicts, 0.07, wait=True)
-    dxl.set_goal_position(dicts)
+def get_speed():
+    return dxl.get_moving_speed(fids)
 
 def get_pos():
     return dxl.get_present_position(tuple(fids)) #Tuple
+def set_pos(poses, wait=True):
+    if len(hom.prev_pos) < 2:
+        hom.prev_pos = poses
+    dicts={}
+    for i in range(0,len(fids)):
+        dicts[fids[i]]=poses[i]
+    duration = 0.0
+    if wait:
+        dp = max_position(hom.prev_pos,poses)
+        duration = (dp / float(hom.speed)) if hom.speed > 0 else 0
+    dxl.set_goal_position(dicts)
+    tess=0
+    step = 0.005
+    while duration - step > 0:
+        duration -= step #0.0007
+        tess += step
+        if (tess >= 0.04 or duration - step <= 0):
+            break
+    if wait:
+        sleep(duration)    
+
+def max_position(present_array, next_array):
+    dp = 0.0
+    present_array = array_int(present_array)
+    next_array = array_int(next_array)
+    for a in range(len(present_array)):
+        dpp = abs( present_array[a] - next_array[a])
+        if dpp > dp :
+            dp = dpp
+    return dp
+
+def play_frames(file_frms,selected_frms):
+    for i in range(len(selected_frms)):
+        selected_frms[i] -= 1
+    for a in selected_frms:
+        for b in file_frms[a]:
+            set_pos(b)
 
 def motion_excel(addr):
     WorkBook = xlrd.open_workbook(addr)
@@ -35,6 +76,7 @@ def motion_excel(addr):
         amotion.append(angles)
         angles = []
     return amotion
+
 def motion_file(addr,starti=1):
     file = open(addr,'r')
     data = file.read()
@@ -50,10 +92,10 @@ def motion_file(addr,starti=1):
                 frm.append(str_frm[c])
             frms.append(frm)
             frm = []
-        
         amotion.append(frms)
         frms = []
     return amotion
+
 def save_file(addr,arr_file):
     file = open(addr,'w+')
     frm=''
@@ -76,14 +118,6 @@ def compare_me(first_arr,second_arr,compare_ratio):
         if minus > compare_ratio :
             return False
     return True
-
-def play_frames(file_frms,selected_frms):
-    for i in range(len(selected_frms)):
-        selected_frms[i] -= 1
-    for a in selected_frms:
-        for b in file_frms[a]:
-                set_pos(b)
-                sleep(0.03) #to be continued
 
 def input_cv(outstr):
     instr=''
