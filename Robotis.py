@@ -4,7 +4,7 @@ from time import sleep
 import cv2
 from Methods import *
 
-#poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/poss2.txt"
+#poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/poss.txt"
 poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/noname.mtnx"
 frames = motion_file(poss_file)
 dxl.enable_torque(fids)
