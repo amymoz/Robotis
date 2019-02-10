@@ -12,10 +12,6 @@ dxl.enable_torque(fids)
 set_speed(100)
 
 cv2.namedWindow('window')
-dicts={}
-for i in range(0,len(fids)):
-    dicts[fids[i]]=True
-dxl.set_force_control_enable(dicts)
 
 fid=str(fids[0])
 pos=0
@@ -41,12 +37,15 @@ while True :
             s_frame[i] = int(s_frame[i])-1
         set_pos(frames[s_frame[0]][s_frame[1]])
     elif (u_input == 'p'):
-        play_frames(frames,[3])
+        typeA_f_s_l ="31;38,39,36,37"
+        typeA_rot =  "80,81;86,87,84,85"
+        soccer_run = "3;5,6"
+
+        play = typeA_f_s_l
+
+        play_frames(frames,play.split(';')[0].split(',')) 
         while True:
-            play_frames(frames,[5,6])
-        #play_frames(frames,[31])
-        #while True:
-        #    play_frames(frames,[38,39,36,37])
+            play_frames(frames,play_frames(frames,play.split(';')[1].split(',')))
     elif (u_input == 'c'):
         out = input_cv("Inter line,frame,id ==> ").split(',')
         for a in range(len(out)):
@@ -68,4 +67,4 @@ while True :
         u_input=''
     elif (u_input == 'q'):
         break
-dxl.disable_torque(fids)
+#dxl.disable_torque(fids)

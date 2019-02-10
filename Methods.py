@@ -1,4 +1,5 @@
-from time import * 
+import threading
+from time import *
 import xlrd
 import cv2
 from os import system
@@ -11,9 +12,11 @@ def array_int(out):
     for a in range(len(out)):
         out[a] = float(out[a])
     return out
+
 class hom:
     prev_pos = [0]
-    speed=0
+    speed = 0
+
 def set_speed(sped):
     dicts={}
     for i in range(0,len(fids)):
@@ -26,6 +29,7 @@ def get_speed():
 
 def get_pos():
     return dxl.get_present_position(tuple(fids)) #Tuple
+
 def set_pos(poses, wait=True):
     if len(hom.prev_pos) < 2:
         hom.prev_pos = poses
@@ -35,18 +39,19 @@ def set_pos(poses, wait=True):
     duration = 0.0
     if wait:
         dp = max_position(hom.prev_pos,poses)
-        duration = (dp / float(hom.speed)) if hom.speed > 0 else 0
+        duration = (10 / float(hom.speed)) if hom.speed > 0 else 0
     dxl.set_goal_position(dicts)
-    tess=0
-    step = 0.005
-    while duration - step > 0:
-        duration -= step #0.0007
-        tess += step
-        if (tess >= 0.04 or duration - step <= 0):
-            break
+    
+    #tess=0
+    #step = 0.005
+    #while duration - step > 0:
+    #    duration -= step #0.0007
+    #    tess += step
+    #    if (tess >= 0.1 or duration - step <= 0):
+    #        break
     if wait:
-        sleep(duration)    
-
+        sleep(duration)
+    
 def max_position(present_array, next_array):
     dp = 0.0
     present_array = array_int(present_array)
