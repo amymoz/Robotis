@@ -5,6 +5,10 @@ import cv2
 from os import system
 import pypot.dynamixel as dynamixel
 
+class hom:
+    prev_pos = [0]
+    speed = 0
+
 def prt(st,end='\n'):
     system("printf \"{0}\"".format(st+end))
 
@@ -12,10 +16,6 @@ def array_int(out):
     for a in range(len(out)):
         out[a] = float(out[a])
     return out
-
-class hom:
-    prev_pos = [0]
-    speed = 0
 
 def set_speed(sped):
     dicts={}
@@ -41,14 +41,6 @@ def set_pos(poses, wait=True):
         dp = max_position(hom.prev_pos,poses)
         duration = (10 / float(hom.speed)) if hom.speed > 0 else 0
     dxl.set_goal_position(dicts)
-    
-    #tess=0
-    #step = 0.005
-    #while duration - step > 0:
-    #    duration -= step #0.0007
-    #    tess += step
-    #    if (tess >= 0.1 or duration - step <= 0):
-    #        break
     if wait:
         sleep(duration)
     
