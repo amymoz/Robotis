@@ -4,9 +4,9 @@ from time import sleep
 import cv2
 from Methods import *
 
-#poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/poss.txt"
-poss_file = "/media/root/Game/Professional/Project/GitArch/Robotis/noname.mtnx"
-frames = motion_file(poss_file)
+#DataBase = "/media/root/Game/Professional/Project/GitArch/Robotis/TypeA.db"
+DataBase = "/media/root/Game/Professional/Project/GitArch/Robotis/Soccer.db"
+frames = motion_file(DataBase)
 dxl.enable_torque(fids)
 
 set_speed(100)
@@ -54,7 +54,7 @@ while True :
         next_value = input_cv("Inter new value({})==> ".format(pre_value))
         frames[out[0]][out[1]][out[2]] = next_value
     elif (u_input == 'l'): 
-        save_file(poss_file,frames)
+        save_file(DataBase,frames)
     elif (u_input == 'w'):
         pos += float(2)
         update_pos()
