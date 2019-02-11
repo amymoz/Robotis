@@ -17,6 +17,11 @@ def array_int(out):
         out[a] = float(out[a])
     return out
 
+def play_action(Database_file,action):
+    play_frames(Database_file,action.split(';')[0].split(','))
+    while True:
+        play_frames(Database_file,action.split(';')[1].split(','))
+
 def set_speed(sped):
     dicts={}
     for i in range(0,len(fids)):
