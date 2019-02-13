@@ -1,33 +1,51 @@
-import threading
 from time import *
 import xlrd
 import cv2
 from os import system
 import pypot.dynamixel as dynamixel
 
-class hom:
-    prev_pos = [0]
-    speed = 0
-
-def prt(st,end='\n'):
-    system("printf \"{0}\"".format(st+end))
-
-def array_int(out):
-    for a in range(len(out)):
-        out[a] = float(out[a])
-    return out
+#class var:
+#    speed = 0
 
 def play_action(Database_file,action):
-    play_frames(Database_file,action.split(';')[0].split(','))
+    one_time_frame = array_int(action.split(':')[0].split(';')[0].split(','))
+    loop_frame = array_int(action.split(':')[0].split(';')[1].split(','))
+    speed = float(action.split(':')[1].split(',')[0])
+    duration = float(action.split(':')[1].split(',')[1])
+    set_speed(speed)
+    play_frames(Database_file,one_time_frame)
     while True:
-        play_frames(Database_file,action.split(';')[1].split(','))
+        play_frames(Database_file,loop_frame)
 
 def set_speed(sped):
     dicts={}
     for i in range(0,len(fids)):
         dicts[fids[i]]=sped
-    hom.speed = sped
+    var.speed = sped
     dxl.set_moving_speed(dicts)
+
+def set_pos(poses, wait=True, duration=0):
+    dicts={}
+    for i in range(0,len(fids)):
+        dicts[fids[i]]=poses[i]
+    
+    #duration = 0.0
+    #if len(prev_pos) < 2:
+    #    prev_pos = poses
+    #if wait:
+    #    dp = max_position(prev_pos,poses)
+    #    duration = (dp / float(hom.speed)) if hom.speed > 0 else 0
+    
+    dxl.set_goal_position(dicts)
+    if wait:
+        sleep(duration)
+
+def play_frames(file_frms,selected_frms,wait=True,duration=0):
+    for i in range(len(selected_frms)):
+        selected_frms[i] -= 1
+    for a in selected_frms:
+        for b in file_frms[a]:
+            set_pos(b)
 
 def get_speed():
     return dxl.get_moving_speed(fids)
@@ -35,36 +53,29 @@ def get_speed():
 def get_pos():
     return dxl.get_present_position(tuple(fids)) #Tuple
 
-def set_pos(poses, wait=True):
-    if len(hom.prev_pos) < 2:
-        hom.prev_pos = poses
-    dicts={}
-    for i in range(0,len(fids)):
-        dicts[fids[i]]=poses[i]
-    duration = 0.0
-    if wait:
-        dp = max_position(hom.prev_pos,poses)
-        duration = (10 / float(hom.speed)) if hom.speed > 0 else 0
-    dxl.set_goal_position(dicts)
-    if wait:
-        sleep(duration)
-    
+def prt(st,end='\n'):
+    system("printf \"{0}\"".format(st+end))
+
+def array_int(out):
+    for a in range(len(out)):
+        out[a] = int(out[a])
+    return out
+
+def array_float(out):
+    for a in range(len(out)):
+        out[a] = float(out[a])
+    return out
+
 def max_position(present_array, next_array):
     dp = 0.0
-    present_array = array_int(present_array)
-    next_array = array_int(next_array)
+    present_array = array_float(present_array)
+    next_array = array_float(next_array)
+
     for a in range(len(present_array)):
         dpp = abs( present_array[a] - next_array[a])
         if dpp > dp :
             dp = dpp
     return dp
-
-def play_frames(file_frms,selected_frms):
-    for i in range(len(selected_frms)):
-        selected_frms[i] -= 1
-    for a in selected_frms:
-        for b in file_frms[a]:
-            set_pos(b)
 
 def motion_excel(addr):
     WorkBook = xlrd.open_workbook(addr)
