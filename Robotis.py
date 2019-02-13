@@ -10,12 +10,10 @@ DataBase_Soccer = motion_file('/media/root/Game/Professional/Project/GitArch/Rob
 
 dxl.enable_torque(fids)
 
-#set_speed(150)
-
 actions= {
-    'TypeA_f_s_l' : '31;38,39,36,37:100,0.02',
+    'TypeA_f_s_l' : '31;38,39,36,37:100,2',
     'TypeA_Rotation' : '80,81;86,87,84,85',
-    'Soccer_Run' : '3;5,6'
+    'Soccer_Run' : '3;5,6:120,10'
 }
 
 while True :
@@ -30,4 +28,5 @@ while True :
         play_action(DataBase_TypeA,play)
     elif act.startswith('Soccer'):
         play_action(DataBase_Soccer,play)
+
 dxl.disable_torque(fids)

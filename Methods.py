@@ -1,3 +1,4 @@
+import copy
 from time import *
 import xlrd
 import cv2
@@ -11,41 +12,35 @@ def play_action(Database_file,action):
     one_time_frame = array_int(action.split(':')[0].split(';')[0].split(','))
     loop_frame = array_int(action.split(':')[0].split(';')[1].split(','))
     speed = float(action.split(':')[1].split(',')[0])
-    duration = float(action.split(':')[1].split(',')[1])
+    duration = float(action.split(':')[1].split(',')[1]) / speed
     set_speed(speed)
-    play_frames(Database_file,one_time_frame)
+    sleep(0.1)
+    play_frames(Database_file,one_time_frame,duration=duration)
     while True:
-        play_frames(Database_file,loop_frame)
+        play_frames(Database_file,loop_frame,duration=duration)
 
-def set_speed(sped):
-    dicts={}
-    for i in range(0,len(fids)):
-        dicts[fids[i]]=sped
-    var.speed = sped
-    dxl.set_moving_speed(dicts)
+def play_frames(Database_file,selected_frms,duration=0.0):
+    slected = copy.copy(selected_frms)
+    for i in range(len(slected)):
+        slected[i] -= 1
+    for a in slected:
+        for b in Database_file[a]:
+            set_pos(b,wait=True,duration=duration)
 
-def set_pos(poses, wait=True, duration=0):
+def set_pos(poses, wait=False, duration=0.0):
     dicts={}
     for i in range(0,len(fids)):
         dicts[fids[i]]=poses[i]
-    
-    #duration = 0.0
-    #if len(prev_pos) < 2:
-    #    prev_pos = poses
-    #if wait:
-    #    dp = max_position(prev_pos,poses)
-    #    duration = (dp / float(hom.speed)) if hom.speed > 0 else 0
     
     dxl.set_goal_position(dicts)
     if wait:
         sleep(duration)
 
-def play_frames(file_frms,selected_frms,wait=True,duration=0):
-    for i in range(len(selected_frms)):
-        selected_frms[i] -= 1
-    for a in selected_frms:
-        for b in file_frms[a]:
-            set_pos(b)
+def set_speed(sped):
+    dicts={}
+    for i in range(0,len(fids)):
+        dicts[fids[i]]=sped
+    dxl.set_moving_speed(dicts)
 
 def get_speed():
     return dxl.get_moving_speed(fids)
