@@ -3,48 +3,37 @@ from time import *
 import pypot.dynamixel as dynamixel
 
 def play_action(Database_file,action):
-    one_time_frame = action.split(':')[0].split(';')[0].split(',')
-    loop_frame = action.split(':')[0].split(';')[1].split(',')
-    speed = float(action.split(':')[1].split(',')[0])
-    duration = float(action.split(':')[1].split(',')[1]) / speed
+    semico = action.split(';') 
+    one_time_frame = semico[0].split(',')
+    loop_frame = semico[1].split(',')
+    speed,duration = array_float( semico[2].split(',') )
+    duration /= speed
     set_speed(speed)
     if one_time_frame != ['n']:
-        play_frames(Database_file,array_int(one_time_frame),duration=duration)
-    if loop_frame != ['n']:
-        while True:
-            play_frames(Database_file,array_int(loop_frame),duration=duration)
+        play_frames(Database_file, array_int(one_time_frame), duration)
+    while  loop_frame != ['n']:
+        play_frames(Database_file, array_int(loop_frame), duration)
 
-def play_frames(Database_file,selected_frms,duration=0.0):
+def play_frames(Database_file,selected_frms,duration):
     slected = copy.copy(selected_frms)
     for i in range(len(slected)):
         slected[i] -= 1
     for a in slected:
         for b in Database_file[a]:
-            set_pos(b,wait=True,duration=duration)
+            set_pos(b)
+            sleep(duration)
 
-def set_pos(poses, wait=False, duration=0.0):
+def set_pos(poses):
     dicts={}
     for i in range(0,len(fids)):
         dicts[fids[i]]=poses[i]
     dxl.set_goal_position(dicts)
-    if wait:
-        sleep(duration)
 
-def set_speed(sped):
+def set_speed(speed):
     dicts={}
     for i in range(0,len(fids)):
-        dicts[fids[i]]=sped
+        dicts[fids[i]]=speed
     dxl.set_moving_speed(dicts)
-
-def array_int(out):
-    for a in range(len(out)):
-        out[a] = int(out[a])
-    return out
-
-def array_float(out):
-    for a in range(len(out)):
-        out[a] = float(out[a])
-    return out
 
 def motion_file(addr):
     file = open(addr,'r')
@@ -64,6 +53,16 @@ def motion_file(addr):
         amotion.append(frms)
         frms = []
     return amotion
+
+def array_int(out):
+    for a in range(len(out)):
+        out[a] = int(out[a])
+    return out
+
+def array_float(out):
+    for a in range(len(out)):
+        out[a] = float(out[a])
+    return out
 
 #Start Dynamixel
 port = dynamixel.get_available_ports()[0]
