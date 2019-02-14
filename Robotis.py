@@ -11,9 +11,15 @@ DataBase_Soccer = motion_file('/media/root/Game/Professional/Project/GitArch/Rob
 dxl.enable_torque(fids)
 
 actions= {
-    'TypeA_f_s_l' : '31;38,39,36,37:100,2',
-    'TypeA_Rotation' : '80,81;86,87,84,85',
-    'Soccer_Run' : '3;5,6:120,10'
+    'TypeA_f_s_l' : '31;38,39,36,37:120,2.5',
+    'Soccer_Left_Turn' : '22;n:100,15',
+    'Soccer_Right_Turn' : '21;n:100,15',
+    'Soccer_Run' : '3;5,6:120,10',
+    'TypeA_Backward' : '44,45;50,51,48,49:100,3',
+    'TypeA_Standup_Front' : '27;n:130,230',
+    'Soccer_28' : '30;n:130,230',
+    'TypeA_18' : '18;n:100,150',
+    'Soccer_Shoot_Right' : '31,32;n:500,20'
 }
 
 while True :
