@@ -67,4 +67,4 @@ while True :
         u_input=''
     elif (u_input == 'q'):
         break
-#dxl.disable_torque(fids)
+dxl.disable_torque(fids)

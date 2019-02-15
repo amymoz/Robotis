@@ -4,29 +4,29 @@ import pypot.dynamixel as dynamixel
 
 def play_action(Database_file,action):
     semico = action.split(';') 
-    one_time_frame = semico[0].split(',')
-    loop_frame = semico[1].split(',')
-    speed,duration = array_float( semico[2].split(',') )
-    duration /= speed
-    set_speed(speed)
+    one_time_frame = array_int( semico[0].split(',') )
+    loop_frame = array_int( semico[1].split(',') )
     if one_time_frame != ['n']:
-        play_frames(Database_file, array_int(one_time_frame), duration)
+        play_frames(Database_file, one_time_frame)
     while  loop_frame != ['n']:
-        play_frames(Database_file, array_int(loop_frame), duration)
+        play_frames(Database_file, loop_frame)
 
-def play_frames(Database_file,selected_frms,duration):
-    slected = copy.copy(selected_frms)
-    for i in range(len(slected)):
-        slected[i] -= 1
-    for a in slected:
+def play_frames(Database_file,selected_frms):
+    selected = copy.copy(selected_frms)
+    for i in range(len(selected)):
+        selected[i] -= 1
+    for a in selected:
         for b in Database_file[a]:
+            tt = perf_counter() ##
+            set_speed(b[18])
+            print(perf_counter() - tt) ##
             set_pos(b)
-            sleep(duration)
+            sleep(b[19]/b[18])
 
 def set_pos(poses):
     dicts={}
     for i in range(0,len(fids)):
-        dicts[fids[i]]=poses[i]
+        dicts[fids[i]] = poses[i]
     dxl.set_goal_position(dicts)
 
 def set_speed(speed):
@@ -47,7 +47,7 @@ def motion_file(addr):
         for b in range(1,len(str_frms)):
             str_frm = str(str_frms[b]).split(',')
             for c in range(len(str_frm)):
-                frm.append(str_frm[c])
+                frm.append(float(str_frm[c]))
             frms.append(frm)
             frm = []
         amotion.append(frms)
@@ -57,11 +57,6 @@ def motion_file(addr):
 def array_int(out):
     for a in range(len(out)):
         out[a] = int(out[a])
-    return out
-
-def array_float(out):
-    for a in range(len(out)):
-        out[a] = float(out[a])
     return out
 
 #Start Dynamixel
