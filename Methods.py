@@ -3,35 +3,48 @@ from time import *
 import pypot.dynamixel as dynamixel
 
 actions = {
-    'Soccer_Forward' : '4;6,5',
+    'TypeA_Forward' : '32,33;38,39,36,37',
+    'TypeA_Backward' : '44,45;50,51,48,49'
+    'TypeA_Forward_Left' : '104,105;110,111,108,109',
+    'TypeA_Forward_Right' : '116,117;122,123,120,121',
+    'TypeA_Standup_Front' : '27;n',
+    'Soccer_Forward' : '4;6,5;100,15',
+    'Soccer_Forward_left' : 'n;11',
     'Soccer_Backward' : '14;16,15',
     'Soccer_Turn_Right' : '21;n',
     'Soccer_Turn_Left' : '22;n',
     'Soccer_Shoot_Right' : '31,32;n',
     'Soccer_Pass_Right' : '39;n',
-    'TypeA_Standup_Front' : '27;n',
-    'TypeA_Forward' : '31;38,39,36,37'
-    #'TypeA_Backward' : '44,45;50,51,48,49',
+    'Soccer_Standup_Front' : '29;n',
 }
 
 def play_action(Database_file,action):
     semico = action.split(';') 
     one_time_frame =  semico[0].split(',')
     loop_frame = semico[1].split(',')
+    duration=[]
+    if (len(semico) == 3):
+        duration = semico[2].split(',')
     if one_time_frame != ['n']:
-        play_lines(Database_file, array_int(one_time_frame))
+        play_lines(Database_file, array_int(one_time_frame), duration=duration)
     while  loop_frame != ['n']:
-        play_lines(Database_file, array_int( loop_frame))
+        play_lines(Database_file, array_int( loop_frame), duration=duration)
 
-def play_lines(Database_file,line_array):
+def play_lines(Database_file,line_array,duration=[]):
     lines = copy.copy(line_array)
     for i in range(len(lines)):
         lines[i] -= 1
     for a in lines:
         for b in Database_file[a]:
-            set_speed(b[18])
+            if (len(duration)>0):
+                set_speed(duration[0])    
+            else:
+                set_speed(b[18])
             set_position(b)
-            sleep(b[19]/b[18])
+            if (len(duration)>0):
+                sleep(duration[1]/duration[0])
+            else:
+                sleep(b[19]/b[18])
 
 def set_position(positions):
     dicts={}
