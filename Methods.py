@@ -2,31 +2,49 @@ import copy
 from time import *
 import pypot.dynamixel as dynamixel
 
+DataBase_TypeA = motion_file('/media/root/Game/Professional/Project/GitArch/Robotis/TypeA.db')
+DataBase_Soccer = motion_file('/media/root/Game/Professional/Project/GitArch/Robotis/Soccer.db')
+
 actions = {
-    'TypeA_Forward' : '32,33;38,39,36,37',
-    'TypeA_Backward' : '44,45;50,51,48,49'
-    'TypeA_Forward_Left' : '104,105;110,111,108,109',
-    'TypeA_Forward_Right' : '116,117;122,123,120,121',
-    'TypeA_Standup_Front' : '27;n',
-    'Soccer_Forward' : '4;6,5;100,15',
-    'Soccer_Forward_left' : 'n;11',
-    'Soccer_Backward' : '14;16,15',
+    'Soccer_Balance' : '1;n',
+    'Soccer_Forward' : '4;6,5;100,10',
+    'Soccer_Forward_Right' : 'n;11;200,20',
+    'Soccer_Forward_Left' : 'n;12;200,20',
+    'Soccer_Backward' : '14;16,15;150,15',
     'Soccer_Turn_Right' : '21;n',
     'Soccer_Turn_Left' : '22;n',
     'Soccer_Shoot_Right' : '31,32;n',
+    'Soccer_Shoot_Left' : '33,34;n',
     'Soccer_Pass_Right' : '39;n',
+    'Soccer_Pass_Left' : '40;n;400,40',
     'Soccer_Standup_Front' : '29;n',
+    'TypeA_Forward' : '32,33;38,39,36,37;100,2',
+    'TypeA_Backward' : '44,45;50,51,48,49',
+    'TypeA_Forward_Left' : '104,105;110,111,108,109',
+    'TypeA_Forward_Right' : '116,117;122,123,120,121',
+    'TypeA_Standup_Front' : '27;n',
+    'TypeA_Standup_Back' : '28;n',
 }
 
-def play_action(Database_file,action):
-    semico = action.split(';') 
-    one_time_frame =  semico[0].split(',')
-    loop_frame = semico[1].split(',')
-    duration=[]
-    if (len(semico) == 3):
-        duration = semico[2].split(',')
+def play_action(action):
+    Database_file = ''
+    if action.startswith('TypeA'):
+        Database_file = DataBase_TypeA
+    elif action.startswith('Soccer'):
+        Database_file = DataBase_Soccer
+    
+    action = actions[action]
+    action = action.split(';')
+    one_time_frame =  action[0].split(',')
+    loop_frame = action[1].split(',')
+    
+    duration = []
+    if (len(action) == 3):
+        duration = array_int(action[2].split(','))
+    
     if one_time_frame != ['n']:
         play_lines(Database_file, array_int(one_time_frame), duration=duration)
+    
     while  loop_frame != ['n']:
         play_lines(Database_file, array_int( loop_frame), duration=duration)
 
@@ -37,7 +55,7 @@ def play_lines(Database_file,line_array,duration=[]):
     for a in lines:
         for b in Database_file[a]:
             if (len(duration)>0):
-                set_speed(duration[0])    
+                set_speed(duration[0])
             else:
                 set_speed(b[18])
             set_position(b)
@@ -82,7 +100,19 @@ def array_int(out):
         out[a] = int(out[a])
     return out
 
-#Start Dynamixel
-port = dynamixel.get_available_ports()[0]
-dxl = dynamixel.DxlIO(port)
-fids = dxl.scan(ids=list(range(19)))
+def Start_Dynamixel():
+    port = dynamixel.get_available_ports()[0]
+    dxl = dynamixel.DxlIO(port)
+    fids = dxl.scan(ids=list(range(19)))
+    dxl.enable_torque(fids)
+
+if __name__ == "__main__":
+    Start_Dynamixel()
+    while True:
+        system('clear')
+        output_str = ''
+        for a in range(len(actions.keys())):
+            output_str += str(a+1) +' ==> ' + list(actions.keys())[a] + '\n'
+        output_str += 'Enter number of action to run ==> '
+        act = str(list(actions.keys())[int(input(output_str))-1])
+        play_action(act)
