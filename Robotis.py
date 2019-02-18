@@ -13,7 +13,7 @@ detector = apriltag.Detector()
 
 Start_Dynamixel()
 
-thread = []
+thread = 0
 robo_play = ['','']
 
 while True :
@@ -43,19 +43,14 @@ while True :
     except:
         robo_play[1] = 'Soccer_Balance'
     
-    if (robo_play[0] != robo_play[1] ) :
-        if len(thread)>0:
-            thread[0]._stop()
-    else:
-        continue
-    #overlay = frame // 2 + detect_img[:, :, None] // 2
-    #cv2.imshow('frame', overlay)
-    #cv2.waitKey(1)
-    
-    t = threading.Thread(target=play_action,args=(robo_play[1]))
-    thread.append(t)
-    t.start()
+    overlay = frame // 2 + detect_img[:, :, None] // 2
+    cv2.imshow('frame', overlay)
+    cv2.waitKey(1)
+
+    if (robo_play[0] == robo_play[1] ) :
+        continue    
     
     robo_play[0] = robo_play[1]
-    robo_play[1] = ''
-    
+    thread._stop()
+    thread = threading.Thread(target=play_action,args=(robo_play[1]))
+    thread.start()
