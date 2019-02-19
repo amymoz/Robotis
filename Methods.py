@@ -1,12 +1,34 @@
+#!/usr/bin/python3
+from os import system
 import copy
 from time import *
 import pypot.dynamixel as dynamixel
+
+def motion_file(file_address):
+    file = open(file_address,'r')
+    data = file.read()
+    file.close()
+    amotion = []
+    frms = []
+    frm = []
+    for a in data.split('\n'):
+        str_frms = str(a).split(';')
+        for b in range(1,len(str_frms)):
+            str_frm = str(str_frms[b]).split(',')
+            for c in range(len(str_frm)):
+                frm.append(float(str_frm[c]))
+            frms.append(frm)
+            frm = []
+        amotion.append(frms)
+        frms = []
+    return amotion
+
 
 DataBase_TypeA = motion_file('/media/root/Game/Professional/Project/GitArch/Robotis/TypeA.db')
 DataBase_Soccer = motion_file('/media/root/Game/Professional/Project/GitArch/Robotis/Soccer.db')
 
 actions = {
-    'Soccer_Balance' : '1;n',
+    'Soccer_Balance' : '2;n',
     'Soccer_Forward' : '4;6,5;100,10',
     'Soccer_Forward_Right' : 'n;11;200,20',
     'Soccer_Forward_Left' : 'n;12;200,20',
@@ -76,38 +98,17 @@ def set_speed(speed):
         dicts[fids[i]]=speed
     dxl.set_moving_speed(dicts)
 
-def motion_file(file_address):
-    file = open(file_address,'r')
-    data = file.read()
-    file.close()
-    amotion = []
-    frms = []
-    frm = []
-    for a in data.split('\n'):
-        str_frms = str(a).split(';')
-        for b in range(1,len(str_frms)):
-            str_frm = str(str_frms[b]).split(',')
-            for c in range(len(str_frm)):
-                frm.append(float(str_frm[c]))
-            frms.append(frm)
-            frm = []
-        amotion.append(frms)
-        frms = []
-    return amotion
-
 def array_int(out):
     for a in range(len(out)):
         out[a] = int(out[a])
     return out
 
-def Start_Dynamixel():
-    port = dynamixel.get_available_ports()[0]
-    dxl = dynamixel.DxlIO(port)
-    fids = dxl.scan(ids=list(range(19)))
-    dxl.enable_torque(fids)
+port = dynamixel.get_available_ports()[0]
+dxl = dynamixel.DxlIO(port)
+fids = dxl.scan(ids=list(range(19)))
+dxl.enable_torque(fids)
 
 if __name__ == "__main__":
-    Start_Dynamixel()
     while True:
         system('clear')
         output_str = ''

@@ -7,11 +7,9 @@ import threading
 import cv2
 import apriltag
 
-cap = cv2.VideoCapture(2)
-detector = apriltag.Detector()
+#cap = cv2.VideoCapture(2)
+#detector = apriltag.Detector()
 #cv2.namedWindow('frame')
-
-Start_Dynamixel()
 
 thread = 0
 robo_play = ['','']
