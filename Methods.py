@@ -109,6 +109,7 @@ fids = dxl.scan(ids=list(range(19)))
 dxl.enable_torque(fids)
 
 if __name__ == "__main__":
+    print(fids)
     while True:
         system('clear')
         output_str = ''
