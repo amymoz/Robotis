@@ -23,8 +23,8 @@ def motion_file(file_address):
         frms = []
     return amotion
 
-DataBase_TypeA = motion_file('TypeA.db')
-DataBase_Soccer = motion_file('Soccer.db')
+DataBase_TypeA = motion_file('/media/root/Game/Professional/Project/GitArch/Robotis/TypeA.db')
+DataBase_Soccer = motion_file('/media/root/Game/Professional/Project/GitArch/Robotis/Soccer.db')
 
 actions = {
     'Soccer_Balance' : '2;n',
@@ -66,7 +66,7 @@ def play_action(action):
     if one_time_frame != ['n']:
         play_lines(Database_file, array_int(one_time_frame), duration=duration)
     
-    while  loop_frame != ['n']:
+    if  loop_frame != ['n']:
         play_lines(Database_file, array_int( loop_frame), duration=duration)
 
 def play_lines(Database_file,line_array,duration=[]):
@@ -109,8 +109,8 @@ dxl.enable_torque(fids)
 
 if __name__ == "__main__":
     while True:
-        system('clear')
         print(fids)
+        system('clear')
         output_str = ''
         for a in range(len(actions.keys())):
             output_str += str(a+1) +' ==> ' + list(actions.keys())[a] + '\n'
