@@ -38,7 +38,6 @@ actions = {
     'Soccer_Shoot_Left' : '33,34;n',
     'Soccer_Pass_Right' : '39;n',
     'Soccer_Pass_Left' : '40;n;400,40',
-    'Soccer_Standup_Front' : '29;n',
     'TypeA_Forward' : '32,33;38,39,36,37;100,2',
     'TypeA_Backward' : '44,45;50,51,48,49',
     'TypeA_Forward_Left' : '104,105;110,111,108,109',
@@ -66,7 +65,7 @@ def play_action(action):
     if one_time_frame != ['n']:
         play_lines(Database_file, array_int(one_time_frame), duration=duration)
     
-    while  loop_frame != ['n']:
+    if  loop_frame != ['n']: #this just play one time
         play_lines(Database_file, array_int( loop_frame), duration=duration)
 
 def play_lines(Database_file,line_array,duration=[]):

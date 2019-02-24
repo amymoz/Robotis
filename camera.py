@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import time
 import cv2
 import numpy as np
@@ -9,7 +10,7 @@ frameSize = (320, 240)
    
 vs = VideoStream(src=0, usePiCamera=usingPiCamera, resolution=frameSize, framerate=32).start()
 time.sleep(2.0)
-timeCheck = time.time()
+
 while True:
     frame = vs.read()
     if not usingPiCamera:
@@ -19,7 +20,6 @@ while True:
     key = cv2.waitKey(1) & 0xFF
     if key == ord("q"):
         break
-    timeCheck = time.time()
 
 cv2.destroyAllWindows()
 vs.stop()
