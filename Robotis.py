@@ -17,7 +17,7 @@ GPIO.setmode(GPIO.BOARD)
 frameSize = (640, 480)
 
 vs = VideoStream(src=0, usePiCamera=True, resolution=frameSize, framerate=20).start()
-from Methods import *
+#from Methods import *
 
 def map(x,in_min,in_max,out_min,out_max):
     return (x - in_min)/(in_max-in_min)*(out_max-out_min)+out_min
@@ -25,12 +25,12 @@ def map(x,in_min,in_max,out_min,out_max):
 servo_x = 12
 #servo_y = 
 def set_servo(pin,degree):
-    degree = map(degree,0,180,2.5,11)  +90 # 90 is 0 front
+    degree2 = map(degree,-90,90,2.5,11) # 90 is 0 front
     GPIO.setup(pin, GPIO.OUT)
     pwm_servo = GPIO.PWM(pin, 50)
     pwm_servo.start(2.5)
-    pwm_servo.ChangeDutyCycle(degree)
-    sleep(0.5)
+    pwm_servo.ChangeDutyCycle(degree2)
+    sleep(0.01)
     GPIO.cleanup(pin)
     return degree
 
@@ -39,13 +39,13 @@ detector = apriltag.Detector()
 global robo_play
 robo_play = ['', 'Soccer_Balance']
 
-def play_live():
-    while True:
-        play_action(robo_play[1])
-threading.Thread(target=play_live).start()
+#def play_live():
+#    while True:
+#        play_action(robo_play[1])
+#threading.Thread(target=play_live).start()
 
 fails = 0
-x_pos = 0
+x_pos = set_servo(servo_x, 0)
 
 while True :
     frame = vs.read()
@@ -57,13 +57,11 @@ while True :
     try:
         april_x = (detect_data[0][6][0] - frame_center[0]) // 3 
         fails = 0
-
-        elif april_x > 0:
-            x_pos = set_servo(servo_x, x_pos -1 )
+        if april_x > 0:
+            x_pos = set_servo(servo_x, x_pos - 3)
         elif april_x < 0:
-            x_pos = set_servo(servo_x, x_pos +1 )
-        
-        if x_pos > 10 and x_pos < 30
+            x_pos = set_servo(servo_x, x_pos + 3)
+        #if x_pos > 10 and x_pos < 30
 
     except:
         if fails > 10 :
