@@ -40,13 +40,10 @@ while True :
     frame_size = ( len(frame[0]), len(frame) )
     frame_center = ( frame_size[0] // 2 , frame_size[1] // 2 )
 
-    found_tag = False
     for L in range (len(detect_data)):
-        found_tag = False
-        if detect_data[L][1] == 0:
+        if detect_data[L][1] == tagid:
             detect_data = detect_data[L]
-            found_tag = True
-    if found_tag  == False:
+    if len(detect_data) > 1 :
         detect_data = None
     
     try:
