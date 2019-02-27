@@ -7,9 +7,6 @@ import apriltag
 from imutils.video import VideoStream
 import RPi.GPIO as GPIO
 
-tagid = 0
-servo_x,servo_y = 12,35
-
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
@@ -25,14 +22,15 @@ y_pos = set_servo(servo_y,-50)
 
 global robo_play
 robo_play = ['', 'Soccer_Balance']
+tagid = 0
 fails = 0
+servo_x,servo_y = 12,35
 detector = apriltag.Detector()
 
 def play_live():
     while True:
         play_action(robo_play[1])
 threading.Thread(target=play_live).start()
-
 
 while True :
     frame = vs.read()
