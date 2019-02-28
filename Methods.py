@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-from os import system
 from copy import copy
-from time import *
+from time import sleep
 import pypot.dynamixel as dynamixel
 
 def motion_file(file_address):
@@ -28,7 +27,8 @@ DataBase_Soccer = motion_file('Soccer.db')
 
 actions = {
     'Soccer_Balance' : '2;n',
-    'Soccer_Forward' : '4;6,5;100,10',
+#    'Soccer_Forward' : '4;6,5;100,10',
+    'Soccer_Forward' : 'n;6,5;100,10',
     'Soccer_Forward_Right' : 'n;11;200,20',
     'Soccer_Forward_Left' : 'n;12;200,20',
     'Soccer_Backward' : '14;16,15;150,15',
@@ -52,12 +52,11 @@ def play_action(action):
         Database_file = DataBase_TypeA
     elif action.startswith('Soccer'):
         Database_file = DataBase_Soccer
-    
+
     action = actions[action]
     action = action.split(';')
     one_time_frame =  action[0].split(',')
     loop_frame = action[1].split(',')
-    
     duration = []
     if (len(action) == 3):
         duration = array_int(action[2].split(','))
@@ -65,7 +64,7 @@ def play_action(action):
     if one_time_frame != ['n']:
         play_lines(Database_file, array_int(one_time_frame), duration=duration)
     
-    if  loop_frame != ['n']: #this just play one time
+    if  loop_frame != ['n']:
         play_lines(Database_file, array_int( loop_frame), duration=duration)
 
 def play_lines(Database_file,line_array,duration=[]):
