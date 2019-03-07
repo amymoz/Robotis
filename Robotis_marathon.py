@@ -1,10 +1,6 @@
 from time import sleep
-import threading
 import cv2
-import apriltag
-from imutils.video import VideoStream
 import numpy as np
-import RPi.GPIO as GPIO
 
 from Methods import *
 from rasp_Methods import *
